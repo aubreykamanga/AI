@@ -121,8 +121,36 @@ def depthFirstSearch(problem):
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** YOUR CODE HERE ***"
-    util.raiseNotDefined()
+    "*** my CODE HERE ***"
+     # Store the starting coordinates of Pacman on the board
+    startState = problem.getStartState()
+    # Initialize a queue for the fringe list
+    fringe = util.Queue()
+    # Initialize extended list for the nodes that have been visited
+    extended = []
+    # Push the start state to the stack along with an empty list for the directions for a given path
+    fringe.push(([startState], []))
+    # Process queue until either it becomes empty or hits goal state (seen below)
+    while not fringe.isEmpty():
+        # Pop the current node from the queue
+        state, path = fringe.pop()
+        # Take the latest coordinate from our path
+        current = state[-1]
+        # Check if goal state has been reached
+        if problem.isGoalState(current) == True:
+            return path
+        # Check if the current node has been extended
+        if current not in extended:
+            # Append the node in the extended list
+            extended.append(current)
+            # Get the successor nodes of the current position - A triplet with (position, direction, cost)
+            neighbours = problem.getSuccessors(current)
+            for item in neighbours:
+                nextState = [item[0]]
+                nextPath = [item[1]]
+                # Add the successor to the current node (to keep track of our path) and push it to the fringe list
+                fringe.push((state + nextState, path + nextPath))
+        util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
