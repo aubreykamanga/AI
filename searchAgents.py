@@ -405,7 +405,6 @@ def cornersHeuristic(state, problem):
 def nextPoint(position, corners):
     if len(corners) == 0:
         return None
-
     nextCorner = corners[0]
     minCost = util.manhattanDistance(position, nextCorner)
     for corner in corners[1:]:
@@ -506,7 +505,7 @@ def foodHeuristic(state, problem):
     problem.heuristicInfo['wallCount']
     """
     position, foodGrid = state
-    "*** my CODE HERE ***"
+    "*** my CODE here ***"
      foodList = foodGrid.asList()
     if len(foodList) ==0:
         return 0
