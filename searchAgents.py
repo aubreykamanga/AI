@@ -504,7 +504,7 @@ def foodHeuristic(state, problem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+    position,  foodGrid = state
     "*** my CODE here ***"
      foodList = foodGrid.asList()
     if len(foodList) ==0:
@@ -570,7 +570,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
         # Store info for the PositionSearchProblem (no need to change this)
         self.walls = gameState.getWalls()
         self.startState = gameState.getPacmanPosition()
-        self.costFn = lambda x: 1
+        self.costFn =  lambda x: 1
         self._visited, self._visitedlist, self._expanded = {}, [], 0 # DO NOT CHANGE
 
     def isGoalState(self, state):
@@ -584,7 +584,7 @@ class AnyFoodSearchProblem(PositionSearchProblem):
          return self.food[x][y]
         util.raiseNotDefined()
 
-def mazeDistance(point1, point2, gameState):
+def mazeDistance(point1, point2,  gameState):
     """
     Returns the maze distance between any two points, using the search functions
     you have already built. The gameState can be any game state -- Pacman's
