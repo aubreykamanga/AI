@@ -86,108 +86,98 @@ def depthFirstSearch(problem):
     print("Is the start a goal?", problem.isGoalState(problem.getStartState()))
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
-    "*** my CODE HERE ***"
-     # Store the starting coordinates of Pacman on the board
-    startState = problem.getStartState()
-    # Initialize stack for the fringe list
-    fringe = util.Stack()
-    # Initialize extended list for the nodes that have been visited
-    extended = []
-    # Push the start state to the stack along with an empty list for the directions for a given path
-    fringe.push(([startState], []))
-    # Process stack until either it becomes empty or hits goal state
-    while not fringe.isEmpty():
-        # Pop the current node from the stack
-        state, path= fringe.pop()
-        # Take the latest coordinate from our path
-        current = state[-1]
-        # Check if goal state has been reached
-        if problem.isGoalState(current) == True:
-            return path
-        # Check if the current node has been extended
-        if current not in extended:
-            # Append the node in the extended list
-            extended.append(current)
-            # Get the successor nodes of the current position - A triplet with (position, direction, cost)
-            neighbours = problem.getSuccessors(current)
-            for item in neighbours:
-                nextState = [item[0]]
-                nextPath = [item[1]]
-                #Add the successor to the current node (to keep track of our path) and push it to the fringe list
-                fringe.push((state + nextState, path + nextPath))
+    "*** YOUR CODE HERE ***"
+    "***my code is here***"
 
-
+    # DFS is general graph search with a Stack as the data structure
+    #STACK works on the principle of Last-in First-out(LIFO)
+    stack=util.Stack()   #using the stack data structure already provided in util.py, Initialize an empty Stack
+    visited=[]     # a list of visisted states
+    startNode=(problem.getStartState(),[])       # initial/start state is current state, the path is empty here  
+    stack.push(startNode) # add our initial state into the stack
+    while not stack.isEmpty(): #
+        popped=stack.pop()  #remove the last item(top item) from the stack
+        location=popped[0] #
+        path=popped[1]                             #Every state keeps it's path from the starting state
+        if location not in visited:               #In each node we see if it is visited,if it's not then we are getting the successors and push
+            visited.append(location)              #its elements to the stack and we are building the path in depth-first logic
+            if problem.isGoalState(location):     # Check if current state is goal state
+                return path                     #return the path(from startnode) that leads to this location(if is it a goal state)
+            successors=problem.getSuccessors(location) # Get successors of current state
+            for succ in list(successors):   
+                if succ[0] not in visited:
+                    stack.push((succ[0],path+[succ[1]])) #Add new states in stack and find their new path (new action) 
+    return []
     util.raiseNotDefined()
 
 def breadthFirstSearch(problem):
     """Search the shallowest nodes in the search tree first."""
-    "*** my CODE HERE ***"
-     # Store the starting coordinates of Pacman on the board
-    startState = problem.getStartState()
-    # Initialize a queue for the fringe list
-    fringe = util.Queue()
-    # Initialize extended list for the nodes that have been visited
-    extended = []
-    # Push the start state to the stack along with an empty list for the directions for a given path
-    fringe.push(([startState], []))
-    # Process queue until either it becomes empty or hits goal state (seen below)
-    while not fringe.isEmpty():
-        # Pop the current node from the queue
-        state, path = fringe.pop()
-        # Take the latest coordinate from our path
-        current = state[-1]
-        # Check if goal state has been reached
-        if problem.isGoalState(current) == True:
-            return path
-        # Check if the current node has been extended
-        if current not in extended:
-            # Append the node in the extended list
-            extended.append(current)
-            # Get the successor nodes of the current position - A triplet with (position, direction, cost)
-            neighbours = problem.getSuccessors(current)
-            for item in neighbours:
-                nextState = [item[0]]
-                nextPath = [item[1]]
-                # Add the successor to the current node (to keep track of our path) and push it to the fringe list
-                fringe.push((state + nextState, path + nextPath))
-        util.raiseNotDefined()
+    "*** YOUR CODE HERE ***"
+    
+     #the same thing we're doing with DFS but here we are using
+     #queue instead of stack to build the path according to BFS logic
+     #Queue works on the principle of First-in first-out(FIFO)
+     #eg pop will remove the first node that was pushed into the list, (instead of last node as in STACK)
+    queue=util.Queue() # initialise an empty queue
+    visited=[]        #list of visted states                                              
+    startNode=(problem.getStartState(),[])   # initial/start state is current state, the list(path) is empty here                        
+    queue.push(startNode) 
+    while not queue.isEmpty():
+        popped=queue.pop()
+        location=popped[0]
+        path=popped[1]
+        if location not in visited:
+            visited.append(location)
+            if problem.isGoalState(location):
+                return path
+            successors=problem.getSuccessors(location) 
+            for suc in list(successors):
+                if suc[0] not in visited:
+                    queue.push((suc[0],path + [suc[1]]))
+    return []
+    util.raiseNotDefined()
 
 def uniformCostSearch(problem):
     """Search the node of least total cost first."""
-    "*** my CODE HERE ***"
-    # Store the starting coordinates of Pacman on the board
-    startState = problem.getStartState()
-    # Initialize a priority queue for the fringe list
-    fringe = util.PriorityQueue()
-    # Initialize extended list for the nodes that have been visited
-    extended = []
-    # Push the start state to the P-queue along with two empty list(one for the directions, one for cost)
-    # with 0 initial priority
-    fringe.push(([startState], [], []), 0)
-    # Process queue until either it becomes empty or hits goal state
-    while not fringe.isEmpty():
-        # Pop the current node from the stack
-        state, path, cost = fringe.pop()
-        # Take the latest coordinate from our path
-        current = state[-1]
-        # Check if goal state has been reached
-        if problem.isGoalState(current) == True:
-            return path
-        # Check if the current node has been extended
-        if current not in extended:
-            # Append the node in the extended list
-            extended.append(current)
-            # Get the successor nodes of the current position - A triplet with (position, direction, cost)
-            neighbours = problem.getSuccessors(current)
-            for item in neighbours:
-                nextState = [item[0]]
-                nextPath = [item[1]]
-                nextCost = [item[2]]
-                totalCost = cost + nextCost
-                # Add the successor to the current node (to keep track of our path) and push it to the fringe list
-                # Push the path cost up to that node as priority to the queue
-                fringe.push((state + nextState, path + nextPath, totalCost), sum(totalCost))
-        util.raiseNotDefined()
+    "*** YOUR CODE HERE ***"
+     # UCS is general graph search with the PriorityQueue sorting by the cost as the data structure
+     # The cost for UCS only the backward cost
+    Pr_q=util.PriorityQueue() # Construct an empty priority queue that sorts using this backwards cost
+    visited=dict() #create a dictionary of all the visted nodes
+    state=problem.getStartState()
+    nd = {}
+    nd["pred"]=None                                                             
+    nd["act"]=None                                                              
+    nd["state"]=state
+    nd["cost"]=0
+    Pr_q.push(nd,nd["cost"])
+
+    while not Pr_q.isEmpty():
+        nd=Pr_q.pop()
+        state=nd["state"]
+        cost=nd["cost"]
+
+        if state in visited:
+            continue
+        visited[state]=True
+        if problem.isGoalState(state)==True:
+            break
+        for suc in problem.getSuccessors(state):
+            if not suc[0] in visited:
+                new_nd={}
+                new_nd["pred"]=nd
+                new_nd["state"]=suc[0]
+                new_nd["act"]=suc[1]
+                new_nd["cost"]=suc[2]+cost
+                Pr_q.push(new_nd,new_nd["cost"])
+    actions=[]
+    while nd["act"] !=None:
+        actions.insert(0,nd["act"])
+        nd=nd["pred"]
+    return actions
+    util.raiseNotDefined()
+
+   
 
 def nullHeuristic(state, problem=None):
     """
@@ -198,42 +188,46 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** my  CODE HERE ***"
+    "*** YOUR CODE HERE ***"
 
- # Store the starting coordinates of Pacman on the board
-    startState = problem.getStartState()
-    # Initialize a priority queue for the fringe list
-    fringe = util.PriorityQueue()
-    # Initialize extended list for the nodes that have been visited
-    extended = []
-    # Push the start state to the stack along with 2 empty lists (action, cost) and the heuristic as priority
-    fringe.push(([startState], [], []), heuristic(startState, problem))
-    # Process P-queue until either it becomes empty or hits goal state
-    while not fringe.isEmpty():
-        # Pop the current node from the P-queue
-        state, path, cost = fringe.pop()
-        # Take the latest coordinate from our path
-        current = state[-1]
-        # Check if goal state has been reached
-        if problem.isGoalState(current) == True:
-            return path
-        # Check if the current node has been extended
-        if current not in extended:
-            # Append the node in the extended list
-            extended.append(current)
-            # Get the successor nodes of the current position - A triplet with (position, direction, cost)
-            neighbours = problem.getSuccessors(current)
-            for item in neighbours:
-                nextState = [item[0]]
-                nextPath = [item[1]]
-                nextCost = [item[2]]
-                totalCost = cost + nextCost
-                # Compute the heuristic for the next node
-                heu = heuristic(item[0],problem)
-                # Push the next node into the queue with path cost + heuristic as priority
-                fringe.push((state + nextState, path + nextPath, totalCost), sum(totalCost) + heu)
+    Pr_q=util.PriorityQueue()
+    visited=dict()
 
+    state=problem.getStartState()
+    nd={}
+    nd["pred"]=None
+    nd["act"]=None
+    nd["state"]=state
+    nd["cost"]=0
+    nd["eq"]=heuristic(state,problem)
+    Pr_q.push(nd,nd["cost"]+nd["eq"])
 
+    while not Pr_q.isEmpty():
+        nd=Pr_q.pop()
+        state=nd["state"]
+        cost=nd["cost"]
+        v=nd["eq"]
+                                                                               
+        if state in visited:                                              
+            continue
+        visited[state]=True
+        if problem.isGoalState(state)==True:
+            break
+        for suc in problem.getSuccessors(state):
+            if not suc[0] in visited:
+                new_nd={}
+                new_nd["pred"]=nd
+                new_nd["state"]=suc[0]
+                new_nd["act"]=suc[1]
+                new_nd["cost"]=suc[2] + cost
+                new_nd["eq"]=heuristic(new_nd["state"],problem)
+                Pr_q.push(new_nd,new_nd["cost"]+new_nd["eq"])
+    actions= []
+    while nd["act"]!=None:
+        actions.insert(0,nd["act"])
+        nd=nd["pred"]
+    return actions
+   
     util.raiseNotDefined()
 
 
