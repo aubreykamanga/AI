@@ -187,11 +187,7 @@ def uniformCostSearch(problem):
                 # Add the successor to the current node (to keep track of our path) and push it to the fringe list
                 # Push the path cost up to that node as priority to the queue
                 fringe.push((state + nextState, path + nextPath, totalCost), sum(totalCost))
-
-
-
-
-    util.raiseNotDefined()
+        util.raiseNotDefined()
 
 def nullHeuristic(state, problem=None):
     """
@@ -202,7 +198,42 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    "*** my  CODE HERE ***"
+
+ # Store the starting coordinates of Pacman on the board
+    startState = problem.getStartState()
+    # Initialize a priority queue for the fringe list
+    fringe = util.PriorityQueue()
+    # Initialize extended list for the nodes that have been visited
+    extended = []
+    # Push the start state to the stack along with 2 empty lists (action, cost) and the heuristic as priority
+    fringe.push(([startState], [], []), heuristic(startState, problem))
+    # Process P-queue until either it becomes empty or hits goal state
+    while not fringe.isEmpty():
+        # Pop the current node from the P-queue
+        state, path, cost = fringe.pop()
+        # Take the latest coordinate from our path
+        current = state[-1]
+        # Check if goal state has been reached
+        if problem.isGoalState(current) == True:
+            return path
+        # Check if the current node has been extended
+        if current not in extended:
+            # Append the node in the extended list
+            extended.append(current)
+            # Get the successor nodes of the current position - A triplet with (position, direction, cost)
+            neighbours = problem.getSuccessors(current)
+            for item in neighbours:
+                nextState = [item[0]]
+                nextPath = [item[1]]
+                nextCost = [item[2]]
+                totalCost = cost + nextCost
+                # Compute the heuristic for the next node
+                heu = heuristic(item[0],problem)
+                # Push the next node into the queue with path cost + heuristic as priority
+                fringe.push((state + nextState, path + nextPath, totalCost), sum(totalCost) + heu)
+
+
     util.raiseNotDefined()
 
 
